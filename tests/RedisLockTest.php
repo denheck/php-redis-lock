@@ -1,6 +1,6 @@
 <?php
 
-require '../src/PhpRedisLock/RedisLock.php';
+require '../src/RedisLock.php';
 
 class RedisLockTest extends PHPUnit_Framework_TestCase
 {
@@ -15,6 +15,8 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
         RedisLock::connect(array(
             'host' => 'localhost'
         ));
+
+        RedisLock::connect('tcp://localhost:6379');
     }
 
     public function testLock()
