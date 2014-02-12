@@ -1,0 +1,19 @@
+{
+    "name": "dennis/php-redis-lock",
+    "authors": [
+        {
+            "name": "Dennis Heckman",
+            "email": "dennis.heckman@vertive.com"
+        },
+        {
+            "name": "Chris Kite",
+            "email": "chris.kite@vertive.com"
+        }
+    ],
+    "require": {
+      "predis/predis": "v0.8.3"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "3.7.19"
+    }
+}
