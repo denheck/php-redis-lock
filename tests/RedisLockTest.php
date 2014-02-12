@@ -26,7 +26,7 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $lock->getToken(),
-            $this->predis->get('test-resource')
+            $this->predis->get($lock->getKey())
         );
     }
 
@@ -45,7 +45,7 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
         $lock = RedisLock::lock('test-resource');
         RedisLock::release($lock);
 
-        $this->assertFalse($this->predis->exists($lock->getResource()));
+        $this->assertFalse($this->predis->exists($lock->getKey()));
     }
 
     public function testReleaseDefunctLock()
@@ -63,8 +63,21 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
         // new lock should still be there
         $this->assertEquals(
             $newLock->getToken(),
-            $this->predis->get('test-resource')
+            $this->predis->get($newLock->getKey())
         );
+    }
+
+    public function testSetPrefix()
+    {
+        RedisLock::connect();
+        RedisLock::setPrefix('test');
+
+        $lock = RedisLock::lock('test-resource');
+        $this->assertEquals(
+            $lock->getToken(),
+            $this->predis->get('test:test-resource')
+        );
+
     }
 
     protected function tearDown()

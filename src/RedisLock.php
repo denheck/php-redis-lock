@@ -5,6 +5,7 @@ require '../vendor/autoload.php';
 class RedisLock
 {
     protected static $predis;
+    protected static $prefix = 'RedisLock';
     protected $token;
     protected $resource;
 
@@ -13,12 +14,17 @@ class RedisLock
         self::$predis = new Predis\Client($config);
     }
 
+    public static function setPrefix($prefix)
+    {
+        self::$prefix = $prefix;
+    }
+
     public static function lock($resource, $expiration = 300)
     {
         $lock = new RedisLock($resource);
         $predis = self::$predis;
 
-        $reply = self::$predis->set($resource, $lock->getToken(), 'NX', 'EX', $expiration);
+        $reply = self::$predis->set($lock->getKey(), $lock->getToken(), 'NX', 'EX', $expiration);
 
         return (1 == $reply) ? $lock : false;
     }
@@ -34,7 +40,7 @@ else
 end
 LUA;
 
-        self::$predis->eval($script, 1, $lock->getResource(), $lock->getToken());
+        self::$predis->eval($script, 1, $lock->getKey(), $lock->getToken());
     }
 
     public static function disconnect()
@@ -66,5 +72,10 @@ LUA;
     public function getResource()
     {
         return $this->resource;
+    }
+
+    public function getKey()
+    {
+        return self::$prefix . ":" . $this->getResource();
     }
 }
