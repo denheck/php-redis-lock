@@ -10,6 +10,7 @@
             "email": "chris@chriskite.com"
         }
     ],
+    "license": "MIT",
     "require": {
       "predis/predis": "v0.8.3"
     },
