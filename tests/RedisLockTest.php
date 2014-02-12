@@ -19,6 +19,12 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
         RedisLock::connect('tcp://localhost:6379');
     }
 
+    public function testConnectPredisClient()
+    {
+        $client = new Predis\Client();
+        RedisLock::connect($client);
+    }
+
     public function testLock()
     {
         RedisLock::connect();

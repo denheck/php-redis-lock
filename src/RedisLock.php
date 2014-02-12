@@ -9,7 +9,11 @@ class RedisLock
 
     public static function connect($config = null)
     {
-        self::$predis = new Predis\Client($config);
+        if($config instanceof Predis\Client) {
+            self::$predis = $config;
+        } else {
+            self::$predis = new Predis\Client($config);
+        }
     }
 
     public static function setPrefix($prefix)
