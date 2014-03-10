@@ -36,6 +36,21 @@ class RedisLockTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testLockWithExpiration()
+    {
+        RedisLock::connect();
+        $lock = RedisLock::lock('test-resource', 1);
+
+        $this->assertEquals(
+            $lock->getToken(),
+            $this->predis->get($lock->getKey())
+        );
+
+        sleep(2);
+
+        $this->assertNull($this->predis->get($lock->getKey()));
+    }
+
     public function testCouldNotLock()
     {
         RedisLock::connect();
